@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Python Quiz - Learning by Bits</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="base.css">
+    <style>
+        /* ======================================= */
+        /* QUIZ PLAYER SPECIFIC STYLES (MD3) */
+        /* ======================================= */
+
+        /* Main Container */
+        .quiz-container {
+            flex-grow: 1;
+            padding: 24px;
+            max-width: 800px; /* Constrain width for focus */
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Quiz Header & Stats */
+        .quiz-header {
+            background-color: var(--md-sys-color-surface-container);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .quiz-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--md-sys-color-on-surface-variant);
+        }
+
+        #question-counter {
+            color: var(--md-sys-color-primary);
+        }
+
+        /* --- Progress Bar (MD3 Linear Progress) --- */
+        .progress-bar-container {
+            height: 8px;
+            background-color: var(--md-sys-color-surface-container-high);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%; /* Dynamic width handled by JS */
+            background-color: var(--md-sys-color-primary);
+            transition: width 0.3s ease-in-out;
+            border-radius: 4px;
+        }
+
+        /* Quiz Item Container (Question & Options) */
+        .quiz-item-container {
+            background-color: var(--md-sys-color-surface-container-high);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            flex-grow: 1;
+        }
+
+        #question-text {
+            font-size: 24px; /* Headline Small */
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 24px;
+            color: var(--md-sys-color-on-surface);
+        }
+
+        /* --- Options (MD3 Radio/Checkbox List) --- */
+        #options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .option-label {
+            display: block;
+            background-color: var(--md-sys-color-surface);
+            color: var(--md-sys-color-on-surface);
+            border: 1px solid var(--md-sys-color-outline);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+
+        .option-label:hover {
+            background-color: var(--md-sys-color-surface-container-low);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Hide native input */
+        .option-input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        /* Visually highlight selected option */
+        .option-input:checked + .option-label {
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+            border-color: var(--md-sys-color-primary);
+        }
+        
+        /* --- Code Snippet Styling (If coding questions are present) --- */
+        pre {
+            background-color: var(--md-sys-color-surface-container-low);
+            border-radius: 8px;
+            padding: 16px;
+            overflow-x: auto;
+            margin-bottom: 24px;
+            border: 1px solid var(--md-sys-color-outline);
+            color: var(--md-sys-color-on-surface);
+        }
+
+        /* Quiz Footer & Buttons */
+        .quiz-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+            padding: 16px 0;
+        }
+        
+        /* Reusing .md3-button-elevated for primary action */
+        #next-btn {
+            /* Inherits MD3 Elevated Button styles from base.css */
+        }
+        
+        /* Secondary Button (MD3 Outlined Button style) */
+        #skip-btn {
+            background-color: transparent;
+            color: var(--md-sys-color-primary);
+            border: 1px solid var(--md-sys-color-outline);
+            border-radius: 20px;
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        #skip-btn:hover {
+            background-color: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
+            border-color: var(--md-sys-color-primary);
+        }
+        
+        #next-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .quiz-item-container {
+                padding: 24px 16px;
+            }
+            #question-text {
+                font-size: 20px;
+            }
+            .quiz-footer {
+                justify-content: space-between;
+            }
+            #skip-btn, #next-btn {
+                flex-grow: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="top-app-bar">
+        <div class="app-bar-left">
+            <span class="material-symbols-outlined logo-icon">flutter_dash</span>
+            <h1 class="app-bar-title">Python Quiz</h1>
+        </div>
+        <div class="app-bar-right">
+            <button class="profile-button">
+                <span class="material-symbols-outlined profile-icon">account_circle</span>
+            </button>
+        </div>
+    </header>
+    
+    <main class="content-area" style="padding: 0; display: block;">
+        
+        <div id="quiz-player-container" class="quiz-container">
+            <div class="quiz-header">
+                <div class="progress-bar-container">
+                    <div id="progress-bar" class="progress-bar"></div>
+                </div>
+                <div class="quiz-stats">
+                    <span id="question-counter">Question 1 / 10</span> 
+                    <span id="timer">00:00</span>
+                </div>
+            </div>
+        
+            <div class="quiz-item-container card">
+                
+                <pre>
+                    <code>
+def apply_discount(price, rate):
+    return price * (1 - rate)
+                    </code>
+                </pre>
+                
+                <h2 id="question-text">
+                    What is the primary characteristic of an immutable object in Python?
+                </h2>
+                
+                <div id="options-container">
+                    <input type="radio" name="answer" id="opt1" class="option-input" value="A">
+                    <label for="opt1" class="option-label">
+                        The object's value cannot be changed after creation.
+                    </label>
+
+                    <input type="radio" name="answer" id="opt2" class="option-input" value="B">
+                    <label for="opt2" class="option-label">
+                        The object can only be modified by the superuser.
+                    </label>
+
+                    <input type="radio" name="answer" id="opt3" class="option-input" value="C">
+                    <label for="opt3" class="option-label">
+                        The object is stored on the stack instead of the heap.
+                    </label>
+                    
+                    <input type="radio" name="answer" id="opt4" class="option-input" value="D">
+                    <label for="opt4" class="option-label">
+                        It can only contain primitive data types.
+                    </label>
+                </div>
+            </div>
+            
+            <div class="quiz-footer">
+                <button id="skip-btn" class="btn-secondary">Skip</button>
+                <button id="next-btn" class="md3-button-elevated" disabled>Next Question</button>
+            </div>
+        </div>
+
+        <form id="quiz-results-form" action="submit_quiz.html" method="POST" class="hidden">
+            <input type="hidden" name="total_questions" value="10">
+        </form>
+    </main>
+    
+    <footer class="footer">
+        <p>&copy; 2025 Learning by Bits. Good luck!</p>
+    </footer>
+
+    </body>
+</html>

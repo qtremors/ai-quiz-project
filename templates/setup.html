@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Quiz Setup - Project Title</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="base.css">
+    <style>
+        /* ======================================= */
+        /* SETUP PAGE SPECIFIC STYLES */
+        /* ======================================= */
+
+        .setup-container {
+            flex-grow: 1;
+            padding: 48px 24px;
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .setup-card {
+            background-color: var(--md-sys-color-surface-container-high);
+            border-radius: 28px;
+            padding: 40px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .setup-card h2 {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--md-sys-color-primary);
+            margin-top: 0;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 32px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--md-sys-color-on-surface);
+            margin-bottom: 8px;
+        }
+        
+        /* Select and Number Inputs (Using MD3 Filled/Text Field Aesthetics) */
+        select, input[type="number"] {
+            padding: 12px;
+            background-color: var(--md-sys-color-surface-container-low);
+            border: 1px solid var(--md-sys-color-outline);
+            border-radius: 8px;
+            color: var(--md-sys-color-on-surface);
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%;
+            box-sizing: border-box;
+            -webkit-appearance: none; /* Remove default styling */
+            appearance: none;
+        }
+
+        select:focus, input[type="number"]:focus {
+            border-color: var(--md-sys-color-primary);
+            outline: none;
+            box-shadow: 0 0 0 1px var(--md-sys-color-primary);
+        }
+
+        /* Checkbox/Switch Group */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        /* --- Topics Chip/Pill Styling (MD3 style) --- */
+        #topics-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 8px 0;
+        }
+        
+        .topic-chip {
+            background-color: var(--md-sys-color-surface-container-low);
+            color: var(--md-sys-color-on-surface);
+            border-radius: 8px; /* Use rounded corners for MD3 chips */
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+            border: 1px solid var(--md-sys-color-outline);
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .topic-chip.selected {
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+            border-color: var(--md-sys-color-primary);
+        }
+
+        .topic-chip:hover:not(.selected) {
+            background-color: color-mix(in srgb, var(--md-sys-color-surface-container-low) 80%, var(--md-sys-color-primary) 5%);
+        }
+        
+        /* Custom Topic Input */
+        .custom-topic-input-container {
+            position: relative;
+            margin-top: 16px;
+        }
+        .custom-topic-input-container input {
+             padding-right: 50px; /* Space for the button */
+        }
+        .custom-topic-input-container button {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--md-sys-color-primary);
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+        .custom-topic-input-container button:hover {
+            background-color: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
+        }
+
+
+        /* --- GEMINI GENERATE BUTTON STYLES --- */
+        .generate-btn-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .generate-btn {
+            position: relative;
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            border: none;
+            border-radius: 24px;
+            padding: 12px 32px;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            transition: opacity 0.3s, transform 0.2s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            overflow: hidden;
+            min-width: 250px;
+            justify-content: center;
+        }
+        
+        .generate-btn:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .gemini-icon {
+            font-size: 24px;
+        }
+
+        /* Loading Effect - The Gemini-style Ring */
+        .generate-btn.loading {
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        .loading-ring {
+            display: none;
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid var(--md-sys-color-on-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .generate-btn.loading .loading-ring {
+            display: block;
+        }
+
+        .generate-btn.loading .gemini-icon,
+        .generate-btn.loading .btn-text {
+            opacity: 0;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Adjustments for Mobile */
+        @media (max-width: 600px) {
+            .setup-container {
+                padding: 24px 16px;
+            }
+            .setup-card {
+                padding: 24px 20px;
+                border-radius: 16px;
+            }
+            .setup-card h2 {
+                font-size: 28px;
+                margin-bottom: 24px;
+            }
+            .generate-btn {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="top-app-bar">
+        <div class="app-bar-left">
+            <span class="material-symbols-outlined logo-icon">flutter_dash</span>
+            <h1 class="app-bar-title">Learning by Bits</h1>
+        </div>
+        <div class="app-bar-right">
+            <button class="profile-button">
+                <span class="material-symbols-outlined profile-icon">account_circle</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="setup-container">
+        <div class="setup-card">
+            <h2>Create Your Python Quiz</h2>
+            
+            <form id="quiz-setup-form" action="quiz_page.html" method="POST">
+                <input type="hidden" name="language" value="python">
+
+                <div class="form-group">
+                    <label for="level">Difficulty Level:</label>
+                    <select id="level" name="level">
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate" selected>Intermediate</option>
+                        <option value="pro">Pro</option>
+                        <option value="expert">Expert</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="topics">Topics (Select one or more):</label>
+                    <div id="topics-container">
+                        <span class="topic-chip selected" data-topic="variables">Variables & Types</span>
+                        <span class="topic-chip" data-topic="control_flow">Control Flow</span>
+                        <span class="topic-chip" data-topic="functions">Functions</span>
+                        <span class="topic-chip" data-topic="data_structures">Data Structures</span>
+                        <span class="topic-chip" data-topic="oop">OOP Concepts</span>
+                        <span class="topic-chip" data-topic="comprehensions">Comprehensions</span>
+                        <span class="topic-chip" data-topic="generators">Generators</span>
+                        <span class="topic-chip" data-topic="decorators">Decorators</span>
+                        <span class="topic-chip" data-topic="async">Async/Await</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="custom-topic">Custom Topic / Focus Area:</label>
+                    <div class="custom-topic-input-container">
+                        <input type="text" id="custom-topic" placeholder="e.g., 'Django ORM' or 'uv Package Management'">
+                        <button type="button" onclick="addCustomTopic()">
+                            <span class="material-symbols-outlined">add_circle</span>
+                        </button>
+                    </div>
+                    <input type="hidden" name="custom_topics" id="custom-topics-hidden" value="">
+                    <p style="font-size: 13px; color: var(--md-sys-color-on-surface-variant); margin-top: 8px;">
+                        Add specific areas to guide the quiz generation.
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="num-questions">Number of Questions (5-30):</label>
+                    <input type="number" id="num-questions" name="num_questions" min="5" max="30" value="10">
+                </div>
+                
+                <div class="form-group">
+                    <label style="margin-bottom: 0;">Question Type:</label>
+                    <div class="checkbox-group">
+                        <label class="md3-switch" style="margin-top: 8px;">
+                            <input type="checkbox" id="coding-only" name="coding_only" value="true">
+                            <span class="slider"></span>
+                        </label>
+                        <p style="color: var(--md-sys-color-on-surface-variant); margin-top: 8px;">Only Coding Snippet Questions</p>
+                    </div>
+                </div>
+
+                <div class="generate-btn-container">
+                    <button type="submit" class="generate-btn" id="generate-button">
+                        <span class="loading-ring"></span>
+                        <span class="material-symbols-outlined gemini-icon">sparkle</span>
+                        <span class="btn-text">Generate Quiz</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Project Title. Built with Material Design 3 principles.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const topicContainer = document.getElementById('topics-container');
+            const form = document.getElementById('quiz-setup-form');
+            const generateButton = document.getElementById('generate-button');
+            const customTopicsHidden = document.getElementById('custom-topics-hidden');
+
+            // Function to update the hidden input field with selected topics
+            function updateTopics() {
+                const selectedTopics = Array.from(topicContainer.querySelectorAll('.topic-chip.selected'))
+                    .map(chip => chip.textContent.trim());
+                
+                // Add any manually added topics stored in the hidden field (handled by addCustomTopic)
+                const customTopics = customTopicsHidden.value ? customTopicsHidden.value.split(',').filter(t => t.trim() !== '') : [];
+
+                // Combine and remove duplicates before setting the final value
+                const finalTopics = [...new Set([...selectedTopics, ...customTopics])].join(', ');
+                customTopicsHidden.value = finalTopics;
+            }
+
+            // Toggle selection for static topics
+            topicContainer.addEventListener('click', (event) => {
+                const chip = event.target.closest('.topic-chip');
+                if (chip) {
+                    chip.classList.toggle('selected');
+                    updateTopics();
+                }
+            });
+
+            // Handle Custom Topic Addition
+            window.addCustomTopic = function() {
+                const input = document.getElementById('custom-topic');
+                const topicText = input.value.trim();
+                if (topicText && !document.querySelector(`.topic-chip[data-topic="${topicText.toLowerCase().replace(/\s/g, '_')}"]`)) {
+                    
+                    // Create the new chip
+                    const newChip = document.createElement('span');
+                    newChip.className = 'topic-chip selected custom-chip';
+                    newChip.setAttribute('data-topic', topicText.toLowerCase().replace(/\s/g, '_'));
+                    newChip.textContent = topicText;
+                    
+                    // Add a removal button to custom chips
+                    const removeBtn = document.createElement('span');
+                    removeBtn.className = 'material-symbols-outlined';
+                    removeBtn.textContent = 'close';
+                    removeBtn.style.fontSize = '16px';
+                    removeBtn.style.marginLeft = '8px';
+                    removeBtn.style.cursor = 'pointer';
+                    
+                    removeBtn.onclick = function(e) {
+                        e.stopPropagation(); // Prevent chip from toggling selection
+                        newChip.remove();
+                        updateTopics();
+                    };
+
+                    newChip.appendChild(removeBtn);
+                    topicContainer.appendChild(newChip);
+                    
+                    input.value = ''; // Clear input
+                    
+                    // Update hidden field
+                    const currentCustom = customTopicsHidden.value.split(',').filter(t => t.trim() !== '');
+                    currentCustom.push(topicText);
+                    customTopicsHidden.value = currentCustom.join(', ');
+
+                    updateTopics(); // Ensure all topics are recorded
+                }
+            };
+
+            // Handle Form Submission (Add Loading State)
+            form.addEventListener('submit', (e) => {
+                // e.preventDefault(); // Uncomment for actual testing/validation
+                
+                // Final topic check before submission
+                updateTopics();
+
+                // Apply loading state
+                generateButton.classList.add('loading');
+                generateButton.disabled = true;
+                
+                // Optionally add a timeout here to simulate network delay 
+                // and show the loading state before the form actually submits.
+                // Example: setTimeout(() => form.submit(), 1000);
+            });
+
+            // Initial setup of topics (if any are pre-selected)
+            updateTopics();
+        });
+    </script>
+</body>
+</html>
