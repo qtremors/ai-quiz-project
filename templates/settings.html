@@ -1,289 +1,278 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings - Project Title</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="base.css">
-    <style>
-        /* Specific styles for Settings layout */
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Settings - Learning by Bits{% endblock %}
+
+{% block styles %}
+<style>
+    /* Main Layout */
+    .settings-layout {
+        display: flex;
+        gap: 24px;
+        flex-grow: 1;
+        padding: 24px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    .settings-sidebar {
+        flex: 0 0 220px;
+    }
+    .settings-sidebar nav ul { list-style: none; padding: 0; margin: 0; }
+    .settings-sidebar nav li a {
+        display: flex; align-items: center; gap: 12px; padding: 12px;
+        text-decoration: none; color: var(--md-sys-color-on-surface-variant);
+        border-radius: 24px; transition: all 0.2s; font-weight: 500;
+        cursor: pointer;
+    }
+    .settings-sidebar nav li a.active, .settings-sidebar nav li a:hover {
+        background-color: var(--md-sys-color-primary-container);
+        color: var(--md-sys-color-on-primary-container);
+    }
+    .settings-content { flex-grow: 1; display: flex; flex-direction: column; gap: 24px; }
+    
+    /* Section Styling */
+    .settings-section {
+        background-color: var(--md-sys-color-surface-container-high);
+        border-radius: 16px; padding: 24px;
+        display: none; /* Hide sections by default on desktop */
+    }
+    .settings-section.active {
+        display: block; /* Show active section on desktop */
+    }
+    .settings-section h2 { margin-top: 0; margin-bottom: 24px; color: var(--md-sys-color-primary); }
+    
+    /* Form & Item Styling */
+    .form-row {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 16px 0; border-bottom: 1px solid var(--md-sys-color-outline);
+    }
+    .form-row:last-of-type { border-bottom: none; }
+    .form-row p { margin: 0; font-weight: 500; }
+    .form-row input {
+        border: none; background: transparent; color: var(--md-sys-color-on-surface-variant);
+        text-align: right; font-size: 16px; outline: none; padding: 4px 8px; border-radius: 4px;
+    }
+    .form-row input:not([readonly]) {
+        color: var(--md-sys-color-on-surface);
+        background-color: var(--md-sys-color-surface-container-low);
+        box-shadow: inset 0 0 0 1px var(--md-sys-color-primary);
+    }
+    
+    /* General Section Specifics */
+    .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--md-sys-color-outline);
+    }
+    .profile-pic-placeholder {
+        width: 80px; height: 80px; background-color: var(--md-sys-color-primary-container);
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        color: var(--md-sys-color-primary); flex-shrink: 0;
+    }
+    .profile-pic-placeholder .material-symbols-outlined { font-size: 40px; }
+    .profile-name-container { flex-grow: 1; }
+
+    /* Password & Theme Section Specifics */
+    .password-fields { display: none; margin-top: 16px; display: flex; flex-direction: column; gap: 16px; }
+    .password-fields label { font-weight: 500; }
+    .password-fields input { text-align: left; width: 100%; padding: 12px; border-radius: 4px; background-color: var(--md-sys-color-surface-container-low); border: 1px solid var(--md-sys-color-outline); }
+    .md3-radio-group { display: flex; flex-direction: column; gap: 16px; }
+    .md3-radio-item { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+
+    /* Messages */
+    .messages { list-style: none; padding: 0; margin-bottom: 16px; }
+    .messages li.success { background-color: #4F378B; color: #EADDFF; padding: 16px; border-radius: 8px; }
+
+    /* --- MOBILE FRIENDLINESS --- */
+    @media (max-width: 768px) {
         .settings-layout {
-            display: flex;
-            gap: 24px;
-            flex-grow: 1;
-            padding: 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .settings-sidebar {
-            flex-shrink: 0;
-            width: 250px;
-            background-color: var(--md-sys-color-surface-container);
-            border-radius: 12px;
+            flex-direction: column;
             padding: 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            align-self: flex-start; /* Keeps sidebar at the top */
         }
-
-        .settings-sidebar nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        .settings-sidebar {
+            display: none; /* Hide sidebar on mobile */
         }
-
-        .settings-sidebar nav li a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            text-decoration: none;
-            color: var(--md-sys-color-on-surface-variant);
-            border-radius: 8px;
-            transition: background-color 0.2s, color 0.2s;
-            font-weight: 500;
-        }
-
-        .settings-sidebar nav li a:hover {
-            background-color: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
-            color: var(--md-sys-color-on-surface);
-        }
-
-        .settings-sidebar nav li a.active {
-            background-color: var(--md-sys-color-primary-container);
-            color: var(--md-sys-color-on-primary-container);
-        }
-
-        .settings-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
         .settings-section {
-            background-color: var(--md-sys-color-surface-container-high);
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            display: block !important; /* Override JS to show all sections */
         }
-
-        .settings-section h2 {
-            margin-top: 0;
-            margin-bottom: 24px;
-            color: var(--md-sys-color-primary);
-            font-size: 24px;
-        }
-
-        .setting-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--md-sys-color-outline);
-        }
-
-        .setting-item:last-child {
-            border-bottom: none;
-        }
-
-        .setting-item p {
-            margin: 0;
-        }
-
-        /* MD3 Switch Styles (Basic HTML/CSS approach) */
-        .md3-switch {
-            position: relative;
-            display: inline-block;
-            width: 52px; /* Standard MD3 switch width */
-            height: 32px; /* Standard MD3 switch height */
-            cursor: pointer;
-        }
-
-        .md3-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .md3-switch .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--md-sys-color-outline); /* Inactive track color */
-            transition: .4s;
-            border-radius: 16px; /* Pill shape for track */
-        }
-
-        .md3-switch .slider:before {
-            position: absolute;
-            content: "";
-            height: 24px; /* Thumb size */
-            width: 24px;
-            left: 4px;
-            bottom: 4px;
-            background-color: var(--md-sys-color-surface-container-low); /* Inactive thumb color */
-            transition: .4s;
-            border-radius: 50%; /* Round thumb */
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3); /* Thumb elevation */
-        }
-
-        .md3-switch input:checked + .slider {
-            background-color: var(--md-sys-color-primary); /* Active track color */
-        }
-
-        .md3-switch input:checked + .slider:before {
-            transform: translateX(20px); /* Move thumb to the right */
-            background-color: var(--md-sys-color-on-primary); /* Active thumb color */
-        }
-
-        /* MD3 Radio Button Styles */
-        .md3-radio-group {
-            display: flex;
+        .profile-header {
             flex-direction: column;
-            gap: 12px;
-        }
-
-        .md3-radio-item {
-            display: flex;
             align-items: center;
-            gap: 12px;
-            cursor: pointer;
+            text-align: center;
         }
-
-        .md3-radio-item input[type="radio"] {
-            /* Hide default radio */
-            appearance: none;
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--md-sys-color-on-surface-variant);
-            border-radius: 50%;
-            display: grid;
-            place-content: center;
-            transition: border-color 0.2s, background-color 0.2s;
+        .form-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
         }
-
-        .md3-radio-item input[type="radio"]::before {
-            content: "";
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            transform: scale(0);
-            transition: transform 0.2s ease-in-out;
-            background-color: var(--md-sys-color-primary);
+        .form-row input {
+            text-align: left;
+            width: 100%;
         }
-
-        .md3-radio-item input[type="radio"]:checked {
-            border-color: var(--md-sys-color-primary);
-            background-color: var(--md-sys-color-surface-container); /* Subtle background for checked */
+        #account-actions, #password-actions {
+            justify-content: center;
         }
+    }
+</style>
+{% endblock %}
 
-        .md3-radio-item input[type="radio"]:checked::before {
-            transform: scale(1);
-        }
+{% block content %}
+<div class="settings-layout">
+    <!-- DESKTOP NAVIGATION -->
+    <aside class="settings-sidebar">
+        <nav>
+            <ul>
+                <li><a class="sidebar-link active" data-target="general-section"><span class="material-symbols-outlined">person</span> General</a></li>
+                <li><a class="sidebar-link" data-target="security-section"><span class="material-symbols-outlined">security</span> Security</a></li>
+                <li><a class="sidebar-link" data-target="appearance-section"><span class="material-symbols-outlined">palette</span> Appearance</a></li>
+            </ul>
+        </nav>
+    </aside>
 
-        .md3-radio-item label {
-            color: var(--md-sys-color-on-surface);
-        }
-    </style>
-</head>
-<body>
-    <header class="top-app-bar">
-        <div class="app-bar-left">
-            <span class="material-symbols-outlined logo-icon">flutter_dash</span>
-            <h1 class="app-bar-title">Settings</h1>
-        </div>
-        <div class="app-bar-right">
-            <button class="profile-button">
-                <span class="material-symbols-outlined profile-icon">account_circle</span>
-            </button>
-        </div>
-    </header>
+    <main class="settings-content">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="success">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
-    <div class="settings-layout">
-        <aside class="settings-sidebar">
-            <nav>
-                <ul>
-                    <li><a href="#" class="active"><span class="material-symbols-outlined">person</span> General</a></li>
-                    <li><a href="#"><span class="material-symbols-outlined">security</span> Security</a></li>
-                    <li><a href="#"><span class="material-symbols-outlined">notifications</span> Notifications</a></li>
-                    <li><a href="#"><span class="material-symbols-outlined">palette</span> Appearance</a></li>
-                    <li><a href="#"><span class="material-symbols-outlined">data_usage</span> Data & Privacy</a></li>
-                </ul>
-            </nav>
-        </aside>
-
-        <main class="settings-content">
-            <section class="settings-section">
-                <h2>General Account Settings</h2>
-                <div class="setting-item">
-                    <p>Email Address</p>
-                    <div class="text-field" style="width: 250px; margin-bottom: 0;">
-                        <input type="email" id="user-email" value="user@example.com" placeholder=" ">
-                        <label for="user-email">Email</label>
+        <!-- General Section -->
+        <section id="general-section" class="settings-section active">
+            <h2>General</h2>
+            <form id="account-form" method="POST">
+                {% csrf_token %}
+                <div class="profile-header">
+                    <div class="profile-pic-placeholder">
+                        <span class="material-symbols-outlined">person</span>
+                    </div>
+                    <div class="profile-name-container">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                             <p>Name</p>
+                             <button type="button" id="edit-name-btn" class="md3-button-text">Edit</button>
+                        </div>
+                        {{ account_form.name }}
                     </div>
                 </div>
-                <div class="setting-item">
+                <div id="account-actions" style="display: none; text-align: right; margin-top: 24px;">
+                    <button type="button" id="cancel-edit-btn" class="md3-button-text">Cancel</button>
+                    <button type="submit" name="update_account" class="md3-button-elevated">Save Name</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Security Section -->
+        <section id="security-section" class="settings-section">
+            <h2>Security</h2>
+            <form id="email-form" method="POST">
+                {% csrf_token %}
+                 <div class="form-row">
+                    <p>Email</p>
+                    {{ account_form.email }}
+                 </div>
+                 <div style="text-align: right; margin-top: 16px;">
+                    <button type="submit" name="update_account" class="md3-button-elevated">Update Email</button>
+                 </div>
+            </form>
+            <hr style="border-color: var(--md-sys-color-outline); margin: 24px 0;">
+            <form id="password-form" method="POST">
+                {% csrf_token %}
+                <div class="form-row">
                     <p>Change Password</p>
-                    <button class="md3-button-text">Update</button>
+                    <button type="button" id="change-password-btn" class="md3-button-text">Update</button>
                 </div>
-                <div class="setting-item">
-                    <p>Receive promotional emails</p>
-                    <label class="md3-switch">
-                        <input type="checkbox" checked>
-                        <span class="slider"></span>
-                    </label>
+                <div id="password-fields" class="password-fields">
+                    {{ password_form.as_p }}
+                    <div id="password-actions" style="text-align: right; margin-top: 16px;">
+                         <button type="button" id="cancel-password-btn" class="md3-button-text">Cancel</button>
+                        <button type="submit" name="change_password" class="md3-button-elevated">Save Password</button>
+                    </div>
                 </div>
-            </section>
+            </form>
+        </section>
 
-            <section class="settings-section">
-                <h2>Notification Preferences</h2>
-                <div class="setting-item">
-                    <p>Enable Desktop Notifications</p>
-                    <label class="md3-switch">
-                        <input type="checkbox">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div class="setting-item">
-                    <p>Notification Sound</p>
-                    <label class="md3-switch">
-                        <input type="checkbox" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-            </section>
+        <!-- Appearance Section -->
+        <section id="appearance-section" class="settings-section">
+            <h2>Appearance</h2>
+            <p>Theme Preference</p>
+            <div class="md3-radio-group">
+                <label class="md3-radio-item"><input type="radio" name="theme-pref" value="system" checked> System Default</label>
+                <label class="md3-radio-item"><input type="radio" name="theme-pref" value="light"> Light Theme</label>
+                <label class="md3-radio-item"><input type="radio" name="theme-pref" value="dark"> Dark Theme</label>
+            </div>
+        </section>
+    </main>
+</div>
+{% endblock %}
 
-            <section class="settings-section">
-                <h2>Theme Preference</h2>
-                <div class="md3-radio-group">
-                    <label class="md3-radio-item">
-                        <input type="radio" name="theme-pref" value="system" checked>
-                        System Default
-                    </label>
-                    <label class="md3-radio-item">
-                        <input type="radio" name="theme-pref" value="light">
-                        Light Theme
-                    </label>
-                    <label class="md3-radio-item">
-                        <input type="radio" name="theme-pref" value="dark">
-                        Dark Theme
-                    </label>
-                </div>
-            </section>
-        </main>
-    </div>
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // --- Tab Navigation Logic for Desktop ---
+    const sidebarLinks = document.querySelectorAll('.sidebar-link');
+    const contentSections = document.querySelectorAll('.settings-section');
 
-    <footer class="footer">
-        <p>&copy; 2025 Project Title. Built with Material Design 3 principles.</p>
-    </footer>
-</body>
-</html>
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            const targetId = link.getAttribute('data-target');
+            
+            sidebarLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+
+            contentSections.forEach(section => {
+                section.classList.toggle('active', section.id === targetId);
+            });
+        });
+    });
+
+    // --- Form Interaction Logic ---
+    const editNameBtn = document.getElementById('edit-name-btn');
+    const nameInput = document.querySelector('#account-form [name="name"]');
+    const accountActions = document.getElementById('account-actions');
+    const cancelEditBtn = document.getElementById('cancel-edit-btn');
+    const originalName = nameInput.value;
+
+    editNameBtn.addEventListener('click', () => {
+        nameInput.readOnly = false;
+        nameInput.focus();
+        accountActions.style.display = 'flex';
+        accountActions.style.justifyContent = 'flex-end';
+        editNameBtn.style.display = 'none';
+    });
+    
+    cancelEditBtn.addEventListener('click', () => {
+        nameInput.readOnly = true;
+        nameInput.value = originalName;
+        accountActions.style.display = 'none';
+        editNameBtn.style.display = 'block';
+    });
+    
+    // Password change functionality
+    const changePassBtn = document.getElementById('change-password-btn');
+    const cancelPassBtn = document.getElementById('cancel-password-btn');
+    const passFields = document.getElementById('password-fields');
+
+    changePassBtn.addEventListener('click', () => {
+        passFields.style.display = 'flex';
+        changePassBtn.style.display = 'none';
+    });
+
+    cancelPassBtn.addEventListener('click', () => {
+        passFields.style.display = 'none';
+        changePassBtn.style.display = 'block';
+        document.getElementById('password-form').reset();
+    });
+
+    // Make email field editable by default
+    const emailInput = document.querySelector('#email-form [name="email"]');
+    if(emailInput) {
+        emailInput.readOnly = false;
+    }
+});
+</script>
+{% endblock %}
+

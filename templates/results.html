@@ -1,212 +1,189 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Results - Learning by Bits</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="base.css">
-    <style>
-        /* ======================================= */
-        /* QUIZ RESULTS SPECIFIC STYLES (MD3) */
-        /* ======================================= */
+{% extends 'base.html' %}
+{% load static %}
 
-        /* Main Container */
-        .quiz-container {
-            flex-grow: 1;
-            padding: 24px;
-            max-width: 900px; /* Wider to accommodate review content */
-            width: 100%;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
+{% block title %}Quiz Results - Learning by Bits{% endblock %}
 
+{% block styles %}
+<style>
+    /* ======================================= */
+    /* QUIZ RESULTS SPECIFIC STYLES (MD3) */
+    /* ======================================= */
+
+    /* Main Container */
+    .quiz-container {
+        flex-grow: 1;
+        padding: 24px;
+        max-width: 900px; /* Wider to accommodate review content */
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .quiz-container h1 {
+        font-size: 38px; /* Display Small */
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: var(--md-sys-color-primary);
+    }
+
+    .score-text {
+        font-size: 28px; /* Headline Small */
+        font-weight: 500;
+        margin-bottom: 24px;
+        color: var(--md-sys-color-on-surface);
+    }
+
+    .quiz-container h3 {
+        font-size: 24px; /* Title Large */
+        font-weight: 500;
+        color: var(--md-sys-color-primary);
+        border-bottom: 2px solid var(--md-sys-color-outline);
+        padding-bottom: 8px;
+    }
+    
+    /* --- Individual Result Item Card (MD3 Surface) --- */
+    .result-item {
+        background-color: var(--md-sys-color-surface-container-high);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        border: 2px solid transparent; /* Default border */
+        position: relative;
+    }
+
+    .question-text {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        padding-left: 36px; /* Space for the status icon */
+    }
+    
+    .result-item p {
+        font-size: 16px;
+        margin: 8px 0;
+        color: var(--md-sys-color-on-surface-variant);
+    }
+    
+    /* --- Status Styling (Based on MD3 System Colors) --- */
+
+    /* Correct */
+    .result-item.correct {
+        border-color: #6AA84F; /* Success Green */
+    }
+    .result-item.correct::before {
+        content: "done";
+        color: #6AA84F;
+    }
+
+    /* Incorrect */
+    .result-item.incorrect {
+        border-color: #D6605A; /* Error Red */
+    }
+    .result-item.incorrect::before {
+        content: "close";
+        color: #D6605A;
+    }
+
+    /* Skipped */
+    .result-item.skipped {
+        border-color: #FBB444; /* Warning Yellow */
+    }
+    .result-item.skipped::before {
+        content: "redo";
+        color: #FBB444;
+    }
+
+    /* Icon styling using Material Symbols */
+    .result-item::before {
+        font-family: 'Material Symbols Outlined';
+        position: absolute;
+        left: 15px;
+        top: 20px;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    /* Explanation Section */
+    .explanation {
+        background-color: var(--md-sys-color-surface-container-low);
+        border-radius: 8px;
+        padding: 12px;
+        margin-top: 12px;
+        border-left: 4px solid var(--md-sys-color-primary);
+        font-size: 14px;
+        line-height: 1.4;
+        color: var(--md-sys-color-on-surface);
+    }
+    
+    /* Button (Reusing MD3 Elevated Button) */
+    .quiz-container .btn {
+        /* Inherits MD3 Elevated Button styles from base.css */
+        margin-top: 16px;
+        text-decoration: none;
+        display: inline-block;
+        align-self: flex-start;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
         .quiz-container h1 {
-            font-size: 38px; /* Display Small */
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: var(--md-sys-color-primary);
+            font-size: 32px;
         }
-
         .score-text {
-            font-size: 28px; /* Headline Small */
-            font-weight: 500;
-            margin-bottom: 24px;
-            color: var(--md-sys-color-on-surface);
-        }
-
-        .quiz-container h3 {
-            font-size: 24px; /* Title Large */
-            font-weight: 500;
-            color: var(--md-sys-color-primary);
-            border-bottom: 2px solid var(--md-sys-color-outline);
-            padding-bottom: 8px;
-        }
-        
-        /* --- Individual Result Item Card (MD3 Surface) --- */
-        .result-item {
-            background-color: var(--md-sys-color-surface-container-high);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-            border: 2px solid transparent; /* Default border */
-            position: relative;
-        }
-
-        .question-text {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            padding-left: 36px; /* Space for the status icon */
-        }
-        
-        .result-item p {
-            font-size: 16px;
-            margin: 8px 0;
-            color: var(--md-sys-color-on-surface-variant);
-        }
-        
-        /* --- Status Styling (Based on MD3 System Colors) --- */
-
-        /* Correct */
-        .result-item.correct {
-            border-color: #6AA84F; /* Success Green */
-        }
-        .result-item.correct::before {
-            content: "done";
-            color: #6AA84F;
-        }
-
-        /* Incorrect */
-        .result-item.incorrect {
-            border-color: #D6605A; /* Error Red */
-        }
-        .result-item.incorrect::before {
-            content: "close";
-            color: #D6605A;
-        }
-
-        /* Skipped */
-        .result-item.skipped {
-            border-color: #FBB444; /* Warning Yellow */
-        }
-        .result-item.skipped::before {
-            content: "redo";
-            color: #FBB444;
-        }
-
-        /* Icon styling using Material Symbols */
-        .result-item::before {
-            font-family: 'Material Symbols Outlined';
-            position: absolute;
-            left: 15px;
-            top: 20px;
             font-size: 24px;
-            font-weight: 600;
         }
+        .result-item {
+            padding: 16px;
+        }
+        .question-text {
+            padding-left: 32px;
+            font-size: 16px;
+        }
+    }
+</style>
+{% endblock %}
 
-        /* Explanation Section */
-        .explanation {
-            background-color: var(--md-sys-color-surface-container-low);
-            border-radius: 8px;
-            padding: 12px;
-            margin-top: 12px;
-            border-left: 4px solid var(--md-sys-color-primary);
-            font-size: 14px;
-            line-height: 1.4;
-            color: var(--md-sys-color-on-surface);
-        }
+{% block content %}
+<main class="content-area" style="padding: 0; display: block;">
         
-        /* Button (Reusing MD3 Elevated Button) */
-        .quiz-container .btn {
-            /* Inherits MD3 Elevated Button styles from base.css */
-            margin-top: 16px;
-            text-decoration: none;
-            display: inline-block;
-            align-self: flex-start;
-        }
+    <div class="quiz-container">
+        <h1>Quiz Complete! 🎉</h1>
+        <h2 class="score-text">Your Score: 7 / 10</h2>
 
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
-            .quiz-container h1 {
-                font-size: 32px;
-            }
-            .score-text {
-                font-size: 24px;
-            }
-            .result-item {
-                padding: 16px;
-            }
-            .question-text {
-                padding-left: 32px;
-                font-size: 16px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <header class="top-app-bar">
-        <div class="app-bar-left">
-            <span class="material-symbols-outlined logo-icon">flutter_dash</span>
-            <h1 class="app-bar-title">Quiz Results</h1>
-        </div>
-        <div class="app-bar-right">
-            <button class="profile-button">
-                <span class="material-symbols-outlined profile-icon">account_circle</span>
-            </button>
-        </div>
-    </header>
-    
-    <main class="content-area" style="padding: 0; display: block;">
+        <h3>Review Your Answers:</h3>
         
-        <div class="quiz-container">
-            <h1>Quiz Complete! 🎉</h1>
-            <h2 class="score-text">Your Score: 7 / 10</h2>
-
-            <h3>Review Your Answers:</h3>
-            
-            <div class="result-item correct">
-                <div class="question-text">
-                    1. What is the primary characteristic of an immutable object in Python?
-                </div>
-                <p><strong>Your Answer:</strong> The object's value cannot be changed after creation.</p>
+        <div class="result-item correct">
+            <div class="question-text">
+                1. What is the primary characteristic of an immutable object in Python?
             </div>
-            
-            <div class="result-item incorrect">
-                <div class="question-text">
-                    2. Which of the following is NOT a fundamental Python data structure?
-                </div>
-                <p><strong>Your Answer:</strong> Binary Tree</p>
-                <p><strong>Correct Answer:</strong> Dictionary</p>
-                <div class="explanation">
-                    <strong>Explanation:</strong> While a Binary Tree can be implemented in Python, it is a custom data structure, not one of the built-in, fundamental types like List, Tuple, or Dictionary.
-                </div>
-            </div>
-
-            <div class="result-item skipped">
-                <div class="question-text">
-                    3. Write a Python one-liner to calculate the factorial of 5 using recursion.
-                </div>
-                <p><strong>Your Answer:</strong> Skipped</p>
-            </div>
-            
-            <a href="quiz_landing.html" class="md3-button-elevated btn">
-                <span class="material-symbols-outlined">refresh</span> Take Another Quiz
-            </a>
+            <p><strong>Your Answer:</strong> The object's value cannot be changed after creation.</p>
         </div>
-    </main>
-    
-    <footer class="footer">
-        <p>&copy; 2025 Learning by Bits. Sharpening your skills!</p>
-    </footer>
+        
+        <div class="result-item incorrect">
+            <div class="question-text">
+                2. Which of the following is NOT a fundamental Python data structure?
+            </div>
+            <p><strong>Your Answer:</strong> Binary Tree</p>
+            <p><strong>Correct Answer:</strong> Dictionary</p>
+            <div class="explanation">
+                <strong>Explanation:</strong> While a Binary Tree can be implemented in Python, it is a custom data structure, not one of the built-in, fundamental types like List, Tuple, or Dictionary.
+            </div>
+        </div>
 
-    <script id="results-data" type="application/json">
-        </script>
-</body>
-</html>
+        <div class="result-item skipped">
+            <div class="question-text">
+                3. Write a Python one-liner to calculate the factorial of 5 using recursion.
+            </div>
+            <p><strong>Your Answer:</strong> Skipped</p>
+        </div>
+        
+        <!-- Assuming a URL name 'landing' in your main app's urls.py -->
+        <a href="{% url 'home' %}" class="md3-button-elevated btn">
+            <span class="material-symbols-outlined">refresh</span> Take Another Quiz
+        </a>
+    </div>
+</main>
+{% endblock %}

@@ -1,63 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Project Title</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="base.css">
-</head>
-<body>
-    <header class="top-app-bar">
-        <div class="app-bar-left">
-            <span class="material-symbols-outlined logo-icon">flutter_dash</span>
-            <h1 class="app-bar-title">Project Title</h1>
-        </div>
-        <div class="app-bar-right">
-            <button class="profile-button">
-                <span class="material-symbols-outlined profile-icon">account_circle</span>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Log In - Learning by Bits{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="auth-container">
+    <div class="auth-card">
+        <h2>Log In</h2>
+
+        <form action="{% url 'login' %}" method="POST">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div style="color: #D6605A; margin-bottom: 16px; text-align: center;">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="text-field">
+                <input type="email" name="email" id="id_email" required placeholder=" " value="{{ form.email.value|default:'' }}">
+                <label for="id_email">Email</label>
+                {% if form.email.errors %}
+                    <div style="color: #D6605A; font-size: 12px; margin-top: 4px;">{{ form.email.errors.as_text }}</div>
+                {% endif %}
+            </div>
+
+            <div class="text-field">
+                <input type="password" name="password" id="id_password" required placeholder=" ">
+                <label for="id_password">Password</label>
+                 {% if form.password.errors %}
+                    <div style="color: #D6605A; font-size: 12px; margin-top: 4px;">{{ form.password.errors.as_text }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="md3-button-elevated" style="width: 100%; margin-top: 16px;">
+                Log In
             </button>
-        </div>
-    </header>
+        </form>
 
-    <main class="auth-container">
-        <div class="auth-card">
-            <h2>Log In</h2>
-
-            <form action="#" method="POST">
-                <div class="text-field">
-                    <input type="email" id="login-email" required placeholder=" ">
-                    <label for="login-email">Email</label>
-                </div>
-
-                <div class="text-field">
-                    <input type="password" id="login-password" required placeholder=" ">
-                    <label for="login-password">Password</label>
-                </div>
-                
-                <p style="text-align: right; margin: -16px 0 16px 0;">
-                    <a href="forgot_password.html" class="md3-button-text" style="padding: 0; font-size: 13px; text-decoration: underline;">
-                        Forgot Password?
-                    </a>
-                </p>
-
-                <button type="submit" class="md3-button-elevated" style="width: 100%;">
-                    Log In
-                </button>
-            </form>
-
-            <p class="navigation-link">
-                Don't have an account? 
-                <a href="signup.html" class="md3-button-text">Sign Up</a>
-            </p>
-        </div>
-    </main>
-
-    <footer class="footer">
-        <p>&copy; 2025 Project Title. Built with Material Design 3 principles.</p>
-    </footer>
-</body>
-</html>
+        <p class="navigation-link" style="text-align: center; margin-top: 16px;">
+            Don't have an account? 
+            <a href="{% url 'signup' %}" class="md3-button-text">Sign Up</a>
+        </p>
+    </div>
+</main>
+{% endblock %}

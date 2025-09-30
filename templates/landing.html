@@ -1,14 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome - Learning by Bits</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="base.css">
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Welcome - Learning by Bits{% endblock %}
+
+{% block styles %}
     <style>
         /* Specific styles for Quiz Landing Page (MD3 Adaptation) */
 
@@ -225,148 +220,134 @@
             }
         }
     </style>
-</head>
-<body class="md3-system-theme">
-    <header class="top-app-bar">
-        <div class="app-bar-left">
-            <span class="material-symbols-outlined logo-icon">flutter_dash</span>
-            <h1 class="app-bar-title">Learning by Bits</h1>
-        </div>
-        <div class="app-bar-right">
-            <button class="profile-button">
-                <span class="material-symbols-outlined profile-icon">account_circle</span>
-            </button>
-        </div>
-    </header>
-    
-    <main class="content-area">
+{% endblock %}
+
+{% block content %}
+<main class="content-area">
         
-        <div class="landing-hero">
-            <div class="hero-content">
-                <h1>Test Your <span class="text-primary">Code</span> Knowledge</h1>
-                <p class="subtitle">Select a language and generate a personalized quiz to sharpen your skills and learn something new.</p>
-                <a href="#topics" class="btn">Explore Topics</a>
-            </div>
-            <div class="hero-illustration">
-                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <path fill="var(--md-sys-color-primary)" d="M48.4,-63.3C61.4,-53.2,70,-37.7,74.5,-21.2C79,-4.7,79.5,12.8,71.8,25.9C64.1,39,48.2,47.7,33.3,55.5C18.4,63.3,4.5,70.3,-10.8,70.9C-26.1,71.5,-42.8,65.7,-55.9,54.8C-69,43.9,-78.5,27.9,-79.8,11.2C-81.1,-5.5,-74.2,-22.8,-63.9,-33.8C-53.6,-44.8,-40,-49.5,-27.5,-55.1C-15,-60.7,-3.6,-67.2,9.3,-70.3C22.2,-73.5,44.4,-73.4,48.4,-63.3Z" transform="translate(100 100)" opacity="0.2" />
-                    <path fill="var(--md-sys-color-primary)" d="M42.2,-48.5C55.6,-36.8,68.2,-24.5,71.7,-9.9C75.2,4.8,69.5,21.8,59.3,34.5C49.1,47.2,34.4,55.7,19.3,60.8C4.2,65.9,-11.2,67.7,-25.9,63.7C-40.6,59.7,-54.6,49.9,-63.9,36.9C-73.2,23.9,-77.8,7.7,-74.6,-6.1C-71.5,-20,-60.6,-31.6,-48.6,-42.6C-36.6,-53.6,-23.5,-64.1,-8.6,-68.8C6.3,-73.5,28.8,-60.2,42.2,-48.5Z" transform="translate(100 100)" />
-                </svg>
-            </div>
+    <div class="landing-hero">
+        <div class="hero-content">
+            <h1>Test Your <span class="text-primary">Code</span> Knowledge</h1>
+            <p class="subtitle">Select a language and generate a personalized quiz to sharpen your skills and learn something new.</p>
+            <a href="#topics" class="btn">Explore Topics</a>
         </div>
+        <div class="hero-illustration">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <path fill="var(--md-sys-color-primary)" d="M48.4,-63.3C61.4,-53.2,70,-37.7,74.5,-21.2C79,-4.7,79.5,12.8,71.8,25.9C64.1,39,48.2,47.7,33.3,55.5C18.4,63.3,4.5,70.3,-10.8,70.9C-26.1,71.5,-42.8,65.7,-55.9,54.8C-69,43.9,-78.5,27.9,-79.8,11.2C-81.1,-5.5,-74.2,-22.8,-63.9,-33.8C-53.6,-44.8,-40,-49.5,-27.5,-55.1C-15,-60.7,-3.6,-67.2,9.3,-70.3C22.2,-73.5,44.4,-73.4,48.4,-63.3Z" transform="translate(100 100)" opacity="0.2" />
+                <path fill="var(--md-sys-color-primary)" d="M42.2,-48.5C55.6,-36.8,68.2,-24.5,71.7,-9.9C75.2,4.8,69.5,21.8,59.3,34.5C49.1,47.2,34.4,55.7,19.3,60.8C4.2,65.9,-11.2,67.7,-25.9,63.7C-40.6,59.7,-54.6,49.9,-63.9,36.9C-73.2,23.9,-77.8,7.7,-74.6,-6.1C-71.5,-20,-60.6,-31.6,-48.6,-42.6C-36.6,-53.6,-23.5,-64.1,-8.6,-68.8C6.3,-73.5,28.8,-60.2,42.2,-48.5Z" transform="translate(100 100)" />
+            </svg>
+        </div>
+    </div>
 
-        <a href="custom_quiz_chat.html" class="language-card custom-quiz-card">
-            <span class="material-symbols-outlined">sparkle</span>
-            <h2>Generate a Custom Quiz</h2>
-            <p class="subtitle">Ask for a quiz on *any* specific topic, library, or niche concept you are learning right now.</p>
-            <span class="btn">Start Chat Quiz</span>
+    <!-- Assuming a URL name 'custom_quiz' in your main app's urls.py -->
+    <a href="#" class="language-card custom-quiz-card">
+        <span class="material-symbols-outlined">sparkle</span>
+        <h2>Generate a Custom Quiz</h2>
+        <p class="subtitle">Ask for a quiz on *any* specific topic, library, or niche concept you are learning right now.</p>
+        <span class="btn">Start Chat Quiz</span>
+    </a>
+
+    <h2 id="topics" class="section-title">Frontend</h2>
+    <div class="card-container">
+        <a href="#" class="language-card disabled">
+            <div class="card-content">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg" alt="HTML5 Logo" class="language-logo">
+                <h2>HTML</h2>
+            </div>
         </a>
+        <a href="#" class="language-card">
+            <div class="card-content">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/CSS3_logo_and_wordmark.svg" alt="CSS3 Logo" class="language-logo">
+                <h2>CSS</h2>
+            </div>
+        </a>
+        <a href="#" class="language-card disabled">
+            <div class="card-content">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" alt="JavaScript Logo" class="language-logo">
+                <h2>JavaScript</h2>
+            </div>
+        </a>
+        <a href="#" class="language-card disabled">
+            <div class="card-content">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" alt="TypeScript Logo" class="language-logo">
+                <h2>TypeScript</h2>
+            </div>
+        </a>
+        <a href="#" class="language-card disabled">
+            <div class="card-content">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="React Logo" class="language-logo">
+                <h2>React</h2>
+            </div>
+        </a>
+        <a href="#" class="language-card disabled">
+            <div class="card-content">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/8e/Nextjs-logo.svg" alt="Next.js Logo" class="language-logo">
+                <h2>Next.js</h2>
+            </div>
+        </a>
+    </div>
 
-        <h2 id="topics" class="section-title">Frontend</h2>
-        <div class="card-container">
-            <a href="#" class="language-card disabled">
-                <div class="card-content">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg" alt="HTML5 Logo" class="language-logo">
-                    <h2>HTML</h2>
-                </div>
-            </a>
-            <a href="#" class="language-card">
-                <div class="card-content">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/CSS3_logo_and_wordmark.svg" alt="CSS3 Logo" class="language-logo">
-                    <h2>CSS</h2>
-                </div>
-            </a>
-            <a href="#" class="language-card disabled">
-                <div class="card-content">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" alt="JavaScript Logo" class="language-logo">
-                    <h2>JavaScript</h2>
-                </div>
-            </a>
-            <a href="#" class="language-card disabled">
-                <div class="card-content">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" alt="TypeScript Logo" class="language-logo">
-                    <h2>TypeScript</h2>
-                </div>
-            </a>
-            <a href="#" class="language-card disabled">
-                <div class="card-content">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="React Logo" class="language-logo">
-                    <h2>React</h2>
-                </div>
-            </a>
-            <a href="#" class="language-card disabled">
-                <div class="card-content">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8e/Nextjs-logo.svg" alt="Next.js Logo" class="language-logo">
-                    <h2>Next.js</h2>
-                </div>
-            </a>
-        </div>
+    <h2 class="section-title">Backend & Databases</h2>
+    <div class="card-container">
+         <!-- Assuming a URL name 'setup' in your main app's urls.py -->
+        <a href="" class="language-card">
+            <div class="card-content">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python Logo" class="language-logo">
+                <h2>Python</h2>
+            </div>
+        </a>
+        <a href="#" class="language-card disabled">
+            <div class="card-content">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/75/Django_logo.svg" alt="Django Logo" class="language-logo">
+                <h2>Django</h2>
+            </div>
+        </a>
+        <a href="#" class="language-card disabled">
+            <div class="card-content">
+                 <img src="https://www.svgrepo.com/show/353674/django-rest-framework.svg" alt="DRF Logo" class="language-logo">
+                <h2>DRF</h2>
+            </div>
+        </a>
+        <a href="#" class="language-card disabled">
+            <div class="card-content">
+                <img src="https://www.svgrepo.com/show/373585/fastapi.svg" alt="FastAPI Logo" class="language-logo">
+                <h2>FastAPI</h2>
+            </div>
+        </a>
+        <a href="#" class="language-card disabled">
+            <div class="card-content">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" alt="Node.js Logo" class="language-logo">
+                <h2>Node.js</h2>
+            </div>
+        </a>
+    </div>
 
-        <h2 class="section-title">Backend & Databases</h2>
-        <div class="card-container">
-            <a href="quiz_setup.html" class="language-card">
-                <div class="card-content">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python Logo" class="language-logo">
-                    <h2>Python</h2>
-                </div>
-            </a>
-            <a href="#" class="language-card disabled">
-                <div class="card-content">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/75/Django_logo.svg" alt="Django Logo" class="language-logo">
-                    <h2>Django</h2>
-                </div>
-            </a>
-            <a href="#" class="language-card disabled">
-                <div class="card-content">
-                     <img src="https://www.svgrepo.com/show/353674/django-rest-framework.svg" alt="DRF Logo" class="language-logo">
-                    <h2>DRF</h2>
-                </div>
-            </a>
-            <a href="#" class="language-card disabled">
-                <div class="card-content">
-                    <img src="https://www.svgrepo.com/show/373585/fastapi.svg" alt="FastAPI Logo" class="language-logo">
-                    <h2>FastAPI</h2>
-                </div>
-            </a>
-            <a href="#" class="language-card disabled">
-                <div class="card-content">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" alt="Node.js Logo" class="language-logo">
-                    <h2>Node.js</h2>
-                </div>
-            </a>
-        </div>
-
-        <h2 class="section-title">Libraries & AI/ML</h2>
-        <div class="card-container">
-            <a href="#" class="language-card disabled">
-                <div class="card-content">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/ed/Pandas_logo.svg" alt="Pandas Logo" class="language-logo">
-                    <h2>Pandas</h2>
-                </div>
-            </a>
-            <a href="#" class="language-card disabled">
-                <div class="card-content">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/31/NumPy_logo_2020.svg" alt="NumPy Logo" class="language-logo">
-                    <h2>NumPy</h2>
-                </div>
-            </a>
-            <a href="#" class="language-card disabled">
-                <div class="card-content">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2d/Tensorflow_logo.svg" alt="TensorFlow Logo" class="language-logo">
-                    <h2>TensorFlow</h2>
-                </div>
-            </a>
-            <a href="#" class="language-card disabled">
-                <div class="card-content">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/10/PyTorch_logo_icon.svg" alt="PyTorch Logo" class="language-logo">
-                    <h2>PyTorch</h2>
-                </div>
-            </a>
-        </div>
-    </main>
-    
-    <footer class="footer">
-        <p>&copy; 2025 Learning by Bits. Built with Material Design 3 principles.</p>
-    </footer>
-</body>
-</html>
+    <h2 class="section-title">Libraries & AI/ML</h2>
+    <div class="card-container">
+        <a href="#" class="language-card disabled">
+            <div class="card-content">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/ed/Pandas_logo.svg" alt="Pandas Logo" class="language-logo">
+                <h2>Pandas</h2>
+            </div>
+        </a>
+        <a href="#" class="language-card disabled">
+            <div class="card-content">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/31/NumPy_logo_2020.svg" alt="NumPy Logo" class="language-logo">
+                <h2>NumPy</h2>
+            </div>
+        </a>
+        <a href="#" class="language-card disabled">
+            <div class="card-content">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2d/Tensorflow_logo.svg" alt="TensorFlow Logo" class="language-logo">
+                <h2>TensorFlow</h2>
+            </div>
+        </a>
+        <a href="#" class="language-card disabled">
+            <div class="card-content">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/10/PyTorch_logo_icon.svg" alt="PyTorch Logo" class="language-logo">
+                <h2>PyTorch</h2>
+            </div>
+        </a>
+    </div>
+</main>
+{% endblock %}
