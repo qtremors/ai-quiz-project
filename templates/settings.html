@@ -120,7 +120,7 @@
 
 {% block content %}
 <div class="settings-layout">
-    <!-- DESKTOP NAVIGATION -->
+
     <aside class="settings-sidebar">
         <nav>
             <ul>
@@ -140,7 +140,7 @@
             </ul>
         {% endif %}
 
-        <!-- General Section -->
+
         <section id="general-section" class="settings-section active">
             <h2>General</h2>
             <form id="account-form" method="POST">
@@ -164,7 +164,7 @@
             </form>
         </section>
 
-        <!-- Security Section -->
+
         <section id="security-section" class="settings-section">
             <h2>Security</h2>
             <form id="email-form" method="POST">
@@ -194,7 +194,7 @@
             </form>
         </section>
 
-        <!-- Appearance Section -->
+
         <section id="appearance-section" class="settings-section">
             <h2>Appearance</h2>
             <p>Theme Preference</p>
@@ -211,7 +211,7 @@
 {% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // --- Tab Navigation Logic for Desktop ---
+
     const sidebarLinks = document.querySelectorAll('.sidebar-link');
     const contentSections = document.querySelectorAll('.settings-section');
 
@@ -229,12 +229,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // --- Form Interaction Logic ---
+
     const editNameBtn = document.getElementById('edit-name-btn');
     const nameInput = document.querySelector('#account-form [name="name"]');
     const accountActions = document.getElementById('account-actions');
     const cancelEditBtn = document.getElementById('cancel-edit-btn');
     const originalName = nameInput.value;
+
 
     editNameBtn.addEventListener('click', () => {
         nameInput.readOnly = false;
@@ -244,6 +245,7 @@ document.addEventListener('DOMContentLoaded', function() {
         editNameBtn.style.display = 'none';
     });
     
+
     cancelEditBtn.addEventListener('click', () => {
         nameInput.readOnly = true;
         nameInput.value = originalName;
@@ -251,15 +253,17 @@ document.addEventListener('DOMContentLoaded', function() {
         editNameBtn.style.display = 'block';
     });
     
-    // Password change functionality
+
     const changePassBtn = document.getElementById('change-password-btn');
     const cancelPassBtn = document.getElementById('cancel-password-btn');
     const passFields = document.getElementById('password-fields');
+
 
     changePassBtn.addEventListener('click', () => {
         passFields.style.display = 'flex';
         changePassBtn.style.display = 'none';
     });
+
 
     cancelPassBtn.addEventListener('click', () => {
         passFields.style.display = 'none';
@@ -267,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('password-form').reset();
     });
 
-    // Make email field editable by default
+
     const emailInput = document.querySelector('#email-form [name="email"]');
     if(emailInput) {
         emailInput.readOnly = false;

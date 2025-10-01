@@ -1,7 +1,13 @@
 from django.urls import path
+from . import views
 
-# 🌟 This list MUST be present in any file included via django.urls.include()
 urlpatterns = [
-    # Example path (you will add your API paths here later):
-    # path('quizzes/', views.QuizList.as_view(), name='quiz-list'),
+
+    path('create/', views.create_quiz, name='create_quiz'),
+
+    path('attempt/<int:attempt_id>/question/<int:question_number>/', views.process_question, name='process_question'),
+    path('attempt/<int:attempt_id>/finish/', views.finish_quiz, name='finish_quiz'),
+    path('results/<int:attempt_id>/', views.quiz_results, name='quiz_results'),
+
+    path('generate-from-chat/', views.generate_from_chat, name='generate_from_chat'),
 ]

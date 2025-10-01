@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     
     <style>
-        /* This rule vertically aligns the items on the right side of the navbar. */
         .app-bar-right {
             display: flex;
             align-items: center;
@@ -29,20 +28,18 @@
                 <h1 class="app-bar-title">Learning by Bits</h1>
             </a>
         </div>
+
         <div class="app-bar-right">
             {% if user %}
-                <!-- This link will ONLY appear if the user object exists (i.e., user is logged in) -->
                 <a href="{% url 'logout' %}" class="md3-button-text" style="margin-right: 8px; text-decoration: none;">Log Out</a>
             {% endif %}
 
             <a href="{% url 'settings' %}" class="profile-button" style="text-decoration: none;">
                 {% if user %}
-                    <!-- FILLED icon for logged-in users -->
                     <span class="material-symbols-outlined profile-icon" style="font-variation-settings: 'FILL' 1;">
                         account_circle
                     </span>
                 {% else %}
-                    <!-- OUTLINED icon for logged-out users -->
                     <span class="material-symbols-outlined profile-icon">
                         account_circle
                     </span>

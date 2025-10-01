@@ -148,39 +148,41 @@
 
 {% block content %}
 <main class="content-area" style="padding: 0; display: block;">
-        
     <div class="quiz-container">
         <h1>Quiz Complete! 🎉</h1>
-        <h2 class="score-text">Your Score: 7 / 10</h2>
+        <h2 class="score-text">Your Score: {{ attempt.score }}%</h2>
 
         <h3>Review Your Answers:</h3>
         
-        <div class="result-item correct">
-            <div class="question-text">
-                1. What is the primary characteristic of an immutable object in Python?
+        {% for answer in attempt.answers.all %}
+            {% if answer.is_correct %}
+                <div class="result-item correct">
+            {% elif answer.selected_option is None %}
+                <div class="result-item skipped">
+            {% else %}
+                <div class="result-item incorrect">
+            {% endif %}
+                <div class="question-text">
+                    {{ forloop.counter }}. {{ answer.question.question_text|safe }}
+                </div>
+                
+                {% if answer.selected_option is None %}
+                    <p><strong>Your Answer:</strong> Skipped</p>
+                {% else %}
+                    <p><strong>Your Answer:</strong> {{ answer.selected_option.option_text }}</p>
+                {% endif %}
+                
+                {% if not answer.is_correct and answer.selected_option is not None %}
+                    <p><strong>Correct Answer:</strong> {{ answer.question.get_correct_option.option_text }}</p>
+                    {% if answer.explanation %}
+                        <div class="explanation">
+                            <strong>Explanation:</strong> {{ answer.explanation }}
+                        </div>
+                    {% endif %}
+                {% endif %}
             </div>
-            <p><strong>Your Answer:</strong> The object's value cannot be changed after creation.</p>
-        </div>
+        {% endfor %}
         
-        <div class="result-item incorrect">
-            <div class="question-text">
-                2. Which of the following is NOT a fundamental Python data structure?
-            </div>
-            <p><strong>Your Answer:</strong> Binary Tree</p>
-            <p><strong>Correct Answer:</strong> Dictionary</p>
-            <div class="explanation">
-                <strong>Explanation:</strong> While a Binary Tree can be implemented in Python, it is a custom data structure, not one of the built-in, fundamental types like List, Tuple, or Dictionary.
-            </div>
-        </div>
-
-        <div class="result-item skipped">
-            <div class="question-text">
-                3. Write a Python one-liner to calculate the factorial of 5 using recursion.
-            </div>
-            <p><strong>Your Answer:</strong> Skipped</p>
-        </div>
-        
-        <!-- Assuming a URL name 'landing' in your main app's urls.py -->
         <a href="{% url 'home' %}" class="md3-button-elevated btn">
             <span class="material-symbols-outlined">refresh</span> Take Another Quiz
         </a>

@@ -9,24 +9,26 @@
     /* QUIZ PLAYER SPECIFIC STYLES (MD3) */
     /* ======================================= */
 
-    /* Main Container */
     .quiz-container {
         flex-grow: 1;
         padding: 24px;
-        max-width: 800px; /* Constrain width for focus */
+        max-width: 800px;
         width: 100%;
         margin: 0 auto;
         display: flex;
         flex-direction: column;
         gap: 24px;
+        /* FIX: Ensure container doesn't exceed screen height */
+        height: calc(100vh - 64px); /* Full viewport height minus the top app bar */
+        box-sizing: border-box;
     }
 
-    /* Quiz Header & Stats */
     .quiz-header {
         background-color: var(--md-sys-color-surface-container);
         border-radius: 16px;
         padding: 16px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        flex-shrink: 0; /* Prevent header from shrinking */
     }
 
     .quiz-stats {
@@ -38,44 +40,28 @@
         color: var(--md-sys-color-on-surface-variant);
     }
 
-    #question-counter {
-        color: var(--md-sys-color-primary);
-    }
+    #question-counter { color: var(--md-sys-color-primary); }
+    .progress-bar-container { height: 8px; background-color: var(--md-sys-color-surface-container-high); border-radius: 4px; overflow: hidden; }
+    .progress-bar { height: 100%; width: 0%; background-color: var(--md-sys-color-primary); transition: width 0.3s ease-in-out; border-radius: 4px; }
 
-    /* --- Progress Bar (MD3 Linear Progress) --- */
-    .progress-bar-container {
-        height: 8px;
-        background-color: var(--md-sys-color-surface-container-high);
-        border-radius: 4px;
-        overflow: hidden;
-    }
-
-    .progress-bar {
-        height: 100%;
-        width: 0%; /* Dynamic width handled by JS */
-        background-color: var(--md-sys-color-primary);
-        transition: width 0.3s ease-in-out;
-        border-radius: 4px;
-    }
-
-    /* Quiz Item Container (Question & Options) */
     .quiz-item-container {
         background-color: var(--md-sys-color-surface-container-high);
         border-radius: 16px;
         padding: 32px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        flex-grow: 1;
+        /* FIX: Allow this container to shrink and handle overflow */
+        flex-shrink: 1;
+        overflow-y: auto;
     }
 
     #question-text {
-        font-size: 24px; /* Headline Small */
+        font-size: 24px;
         font-weight: 700;
         margin-top: 0;
         margin-bottom: 24px;
         color: var(--md-sys-color-on-surface);
     }
 
-    /* --- Options (MD3 Radio/Checkbox List) --- */
     #options-container {
         display: flex;
         flex-direction: column;
@@ -99,45 +85,17 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
     
-    /* Hide native input */
-    .option-input {
-        position: absolute;
-        opacity: 0;
-        pointer-events: none;
-    }
+    .option-input { position: absolute; opacity: 0; pointer-events: none; }
+    .option-input:checked + .option-label { background-color: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); border-color: var(--md-sys-color-primary); }
     
-    /* Visually highlight selected option */
-    .option-input:checked + .option-label {
-        background-color: var(--md-sys-color-primary-container);
-        color: var(--md-sys-color-on-primary-container);
-        border-color: var(--md-sys-color-primary);
-    }
-    
-    /* --- Code Snippet Styling (If coding questions are present) --- */
-    pre {
-        background-color: var(--md-sys-color-surface-container-low);
-        border-radius: 8px;
-        padding: 16px;
-        overflow-x: auto;
-        margin-bottom: 24px;
-        border: 1px solid var(--md-sys-color-outline);
-        color: var(--md-sys-color-on-surface);
-    }
-
-    /* Quiz Footer & Buttons */
     .quiz-footer {
         display: flex;
         justify-content: flex-end;
         gap: 16px;
         padding: 16px 0;
+        flex-shrink: 0; /* Prevent footer from shrinking */
     }
     
-    /* Reusing .md3-button-elevated for primary action */
-    #next-btn {
-        /* Inherits MD3 Elevated Button styles from base.css */
-    }
-    
-    /* Secondary Button (MD3 Outlined Button style) */
     #skip-btn {
         background-color: transparent;
         color: var(--md-sys-color-primary);
@@ -148,97 +106,72 @@
         font-weight: 500;
         text-transform: uppercase;
         cursor: pointer;
-        transition: background-color 0.2s, border-color 0.2s;
-    }
-
-    #skip-btn:hover {
-        background-color: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
-        border-color: var(--md-sys-color-primary);
     }
     
-    #next-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        box-shadow: none;
-    }
+    #next-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
 
-    /* Responsive adjustments */
-    @media (max-width: 600px) {
-        .quiz-item-container {
-            padding: 24px 16px;
-        }
-        #question-text {
-            font-size: 20px;
-        }
-        .quiz-footer {
-            justify-content: space-between;
-        }
-        #skip-btn, #next-btn {
-            flex-grow: 1;
-        }
-    }
 </style>
 {% endblock %}
 
 {% block content %}
 <main class="content-area" style="padding: 0; display: block;">
-        
-    <div id="quiz-player-container" class="quiz-container">
-        <div class="quiz-header">
-            <div class="progress-bar-container">
-                <div id="progress-bar" class="progress-bar"></div>
-            </div>
-            <div class="quiz-stats">
-                <span id="question-counter">Question 1 / 10</span> 
-                <span id="timer">00:00</span>
-            </div>
-        </div>
-    
-        <div class="quiz-item-container card">
-            
-            <pre>
-                <code>
-def apply_discount(price, rate):
-    return price * (1 - rate)
-                </code>
-            </pre>
-            
-            <h2 id="question-text">
-                What is the primary characteristic of an immutable object in Python?
-            </h2>
-            
-            <div id="options-container">
-                <input type="radio" name="answer" id="opt1" class="option-input" value="A">
-                <label for="opt1" class="option-label">
-                    The object's value cannot be changed after creation.
-                </label>
-
-                <input type="radio" name="answer" id="opt2" class="option-input" value="B">
-                <label for="opt2" class="option-label">
-                    The object can only be modified by the superuser.
-                </label>
-
-                <input type="radio" name="answer" id="opt3" class="option-input" value="C">
-                <label for="opt3" class="option-label">
-                    The object is stored on the stack instead of the heap.
-                </label>
-                
-                <input type="radio" name="answer" id="opt4" class="option-input" value="D">
-                <label for="opt4" class="option-label">
-                    It can only contain primitive data types.
-                </label>
-            </div>
-        </div>
-        
-        <div class="quiz-footer">
-            <button id="skip-btn" class="btn-secondary">Skip</button>
-            <button id="next-btn" class="md3-button-elevated" disabled>Next Question</button>
-        </div>
-    </div>
-
-    <form id="quiz-results-form" action="" method="POST" style="display: none;">
+    <form id="quiz-question-form" action="{% url 'process_question' attempt_id=attempt.id question_number=question_number %}" method="POST">
         {% csrf_token %}
-        <input type="hidden" name="total_questions" value="10">
+        <div id="quiz-player-container" class="quiz-container">
+            <div class="quiz-header">
+                <div class="progress-bar-container">
+                    <div id="progress-bar" class="progress-bar" style="width: {{ progress_percentage }}%;"></div>
+                </div>
+                <div class="quiz-stats">
+                    <span id="question-counter">Question {{ question_number }} / {{ total_questions }}</span>
+                </div>
+            </div>
+        
+            <div class="quiz-item-container card">
+                <h2 id="question-text">{{ question.question_text|safe }}</h2>
+                
+                <div id="options-container">
+                    {% for option in question.options.all %}
+                    <input type="radio" name="answer" id="opt{{ option.id }}" class="option-input" value="{{ option.id }}">
+                    <label for="opt{{ option.id }}" class="option-label">
+                        {{ option.option_text }}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="quiz-footer">
+                <button type="submit" id="skip-btn" name="action" value="skip">Skip</button>
+                <button type="submit" id="next-btn" class="md3-button-elevated" name="action" value="next" disabled>
+                    {% if is_last_question %}
+                        Finish Quiz
+                    {% else %}
+                        Next Question
+                    {% endif %}
+                </button>
+            </div>
+        </div>
     </form>
 </main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const nextBtn = document.getElementById('next-btn');
+    const optionsContainer = document.getElementById('options-container');
+
+    optionsContainer.addEventListener('change', (event) => {
+        if (event.target.type === 'radio' && event.target.name === 'answer') {
+            nextBtn.disabled = false;
+        }
+    });
+
+    document.getElementById('quiz-question-form').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter' && nextBtn.disabled) {
+            event.preventDefault();
+        }
+    });
+});
+</script>
 {% endblock %}

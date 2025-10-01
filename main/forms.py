@@ -2,7 +2,9 @@ from django import forms
 from .models import User
 from django.contrib.auth.hashers import check_password
 
-# --- Existing Forms ---
+
+
+
 class UserCreationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     confirm_password = forms.CharField(widget=forms.PasswordInput)
@@ -17,6 +19,9 @@ class UserCreationForm(forms.ModelForm):
         if password and confirm_password and password != confirm_password:
             raise forms.ValidationError("Passwords don't match")
         return confirm_password
+
+
+
 
 class LoginForm(forms.Form):
     email = forms.EmailField()
@@ -35,7 +40,9 @@ class LoginForm(forms.Form):
                 raise forms.ValidationError("Invalid email or password.")
         return cleaned_data
 
-# --- NEW: Form for updating name and email ---
+
+
+
 class UpdateAccountForm(forms.ModelForm):
     class Meta:
         model = User
@@ -46,7 +53,9 @@ class UpdateAccountForm(forms.ModelForm):
         self.fields['name'].widget.attrs.update({'class': 'form-control', 'readonly': True})
         self.fields['email'].widget.attrs.update({'class': 'form-control', 'readonly': True})
 
-# --- NEW: Form for changing the password ---
+
+
+
 class ChangePasswordForm(forms.Form):
     old_password = forms.CharField(widget=forms.PasswordInput, label="Current Password")
     new_password1 = forms.CharField(widget=forms.PasswordInput, label="New Password")
