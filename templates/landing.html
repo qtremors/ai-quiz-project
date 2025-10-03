@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Welcome - Learning by Bits{% endblock %}
+{% block title %}Welcome - QTRMRS{% endblock %}
 
 {% block styles %}
     <style>
@@ -34,11 +34,105 @@
         .language-card:hover { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); transform: translateY(-2px); background-color: var(--md-sys-color-surface-container); }
         .language-card h2 { font-size: 18px; font-weight: 500; margin: 12px 0 0 0; }
         .language-logo { width: 64px; height: 64px; object-fit: contain; }
-        .custom-quiz-card { grid-column: 1 / -1; background-color: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); padding: 32px; border: 2px solid var(--md-sys-color-primary); box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); }
-        .custom-quiz-card:hover { background-color: color-mix(in srgb, var(--md-sys-color-primary-container) 90%, black); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); transform: none; }
-        .custom-quiz-card .material-symbols-outlined { font-size: 56px; color: var(--md-sys-color-on-primary-container); margin-bottom: 8px; }
-        .custom-quiz-card h2 { color: var(--md-sys-color-on-primary-container); font-size: 24px; }
-        .custom-quiz-card .subtitle { font-size: 16px; margin-bottom: 24px; opacity: 0.9; }
+        .custom-quiz-card {
+        grid-column: 1 / -1;
+        background-color: var(--md-sys-color-primary-container);
+        color: var(--md-sys-color-on-primary-container);
+        padding: 32px;
+        border: none;
+        border-radius: 24px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex; /* Added for better content alignment */
+        flex-direction: column; /* Added for better content alignment */
+        align-items: center; /* Center content horizontally */
+        justify-content: center; /* Center content vertically */
+        text-align: center; /* Ensure text is centered */
+    }
+
+    .custom-quiz-card:hover {
+        transform: translateY(-4px); /* "Lifts" the card on hover */
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Animated shine/glare effect that sweeps across on hover */
+    .custom-quiz-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -150%; /* Start off-screen to the left */
+        width: 75%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.6s ease-in-out;
+        transform: skewX(-25deg); /* Angle the shine effect */
+        pointer-events: none; /* Allows clicks to pass through */
+    }
+
+    .custom-quiz-card:hover::before {
+        left: 150%; /* Sweep the shine across to the right */
+    }
+
+    /* Styling for the new header containing the logo and brand name */
+    .custom-card-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 24px; /* Space below the branding */
+        color: var(--md-sys-color-on-primary-container);
+    }
+
+    .custom-card-logo {
+        height: 64px; /* Adjust size as needed for the logo */
+        width: auto;
+        margin-bottom: 8px; /* Space between logo and brand name */
+    }
+
+    .custom-card-brand {
+        font-size: 28px; /* Larger font size for the brand name */
+        font-weight: 700; /* Bold */
+        letter-spacing: 0.1em; /* Slight letter spacing for branding */
+        margin: 0; /* Remove default margins */
+        text-transform: uppercase;
+    }
+
+    .custom-quiz-card h2 {
+        color: var(--md-sys-color-on-primary-container);
+        font-size: 24px;
+        margin-top: 16px; /* Space above "Generate a Custom Quiz" title */
+        margin-bottom: 8px; /* Space below "Generate a Custom Quiz" title */
+    }
+
+    .custom-quiz-card .subtitle {
+        font-size: 16px;
+        margin-bottom: 24px;
+        opacity: 0.9;
+        max-width: 80%; /* Constrain width for better readability */
+    }
+
+    /* --- New Button Styling (Outlined -> Filled on Hover) --- */
+    .custom-quiz-button {
+        display: inline-block;
+        background-color: transparent;
+        color: var(--md-sys-color-on-primary-container);
+        border: 1.5px solid var(--md-sys-color-on-primary-container);
+        border-radius: 20px;
+        padding: 10px 24px;
+        font-size: 14px;
+        font-weight: 500;
+        text-transform: uppercase;
+        margin-top: auto;
+        align-self: center;
+        transition: background-color 0.2s, color 0.2s;
+        cursor: pointer;
+    }
+
+    .custom-quiz-card:hover .custom-quiz-button {
+        background-color: var(--md-sys-color-on-primary-container);
+        color: var(--md-sys-color-primary-container);
+    }
         @media (max-width: 900px) { .landing-hero { flex-direction: column; text-align: center; padding: 24px; } .hero-content { max-width: 100%; order: 2; } .hero-illustration { max-width: 100%; order: 1; margin-bottom: 16px; } .landing-hero h1 { font-size: 38px; } .card-container { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); } }
     </style>
 {% endblock %}
@@ -59,10 +153,13 @@
     </div>
 
     <a href="{% url 'chat_quiz' %}" class="language-card custom-quiz-card">
-        <span class="material-symbols-outlined">sparkle</span>
+        <!-- <div class="custom-card-header">
+            <img src="{% static 'images/qtrmrs.png' %}" alt="QTRMRS Logo" class="custom-card-logo"> {# Your logo here #}
+            <h2 class="custom-card-brand">QTRMRS</h2> {# Your brand name here #}
+        </div> -->
         <h2>Generate a Custom Quiz</h2>
         <p class="subtitle">Ask for a quiz on *any* specific topic, library, or niche concept you are learning right now.</p>
-        <span class="btn">Start Chat Quiz</span>
+        <div class="custom-quiz-button">Start Chat Quiz</div>
     </a>
 
     <h2 id="topics" class="section-title">Frontend</h2>

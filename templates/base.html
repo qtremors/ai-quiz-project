@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Learning by Bits{% endblock %}</title>
+    <title>{% block title %}QTRMRS{% endblock %}</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,6 +16,41 @@
             display: flex;
             align-items: center;
         }
+
+        /* Logo styling for circular shape, size control, and hover animation */
+        .logo-container {
+            /* Define a fixed container for the logo to control its space */
+            width: 48px; /* Example fixed width */
+            height: 48px; /* Example fixed height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* Hide parts of the image if it exceeds the container after scaling */
+            border-radius: 50%; /* Make the container circular */
+            /* Add cursor pointer to indicate interactivity */
+            cursor: pointer; 
+            /* Optional: Add a subtle background or border if desired */
+            /* background-color: var(--md3-sys-color-primary-container); */
+        }
+
+        .logo-img {
+            --logo-size: 32px; /* CSS Custom Property for easy manual adjustment (e.g., in dev tools) */
+            height: var(--logo-size);
+            width: var(--logo-size);
+            border-radius: 50%; /* Make the image itself circular */
+            object-fit: cover; /* Ensures the image covers the area without distortion */
+            transition: transform 0.3s ease-in-out; /* Smooth transition for hover effect */
+        }
+
+        .logo-container:hover .logo-img {
+            transform: scale(1.1); /* Zoom in on hover */
+        }
+
+        /* Adjust the gap in the app-bar-left to accommodate the new logo container size */
+        .app-bar-left a {
+            gap: 8px !important; /* Reduced gap to bring title closer to the logo */
+        }
+
     </style>
 
     {% block styles %}{% endblock %}
@@ -24,8 +59,8 @@
     <header class="top-app-bar">
         <div class="app-bar-left">
             <a href="{% url 'home' %}" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 16px;">
-                <span class="material-symbols-outlined logo-icon">flutter_dash</span>
-                <h1 class="app-bar-title">Learning by Bits</h1>
+                <img src="{% static 'images/qtrmrs.png' %}" alt="QTRMRS Logo" class="logo-img">
+                <h1 class="app-bar-title">QTRMRS</h1>
             </a>
         </div>
 
@@ -52,10 +87,9 @@
     {% endblock %}
 
     <footer class="footer">
-        <p>&copy; 2025 Learning by Bits. Built with Material Design 3 principles.</p>
+        <p>&copy; 2025 QTRMRS. Quiz, Train, Refine, Master, Repeat, Succeed.</p>
     </footer>
 
     {% block scripts %}{% endblock %}
 </body>
 </html>
-
