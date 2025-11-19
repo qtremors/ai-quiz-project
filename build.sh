@@ -3,14 +3,14 @@
 set -o errexit
 
 # 1. Install Dependencies
-# Uses the requirements.txt file we generated earlier
+# (We keep this at the root because requirements.txt is at the root)
 pip install -r requirements.txt
 
-# 2. Collect Static Files
-# This gathers all CSS/JS/Images from your apps into the 'staticfiles' directory
-# so WhiteNoise can serve them efficiently in production.
+# 2. Move into the project folder where manage.py is
+cd qtrmrs
+
+# 3. Collect Static Files
 python manage.py collectstatic --no-input
 
-# 3. Apply Migrations
-# This updates the PostgreSQL database schema to match your models.py
+# 4. Apply Migrations
 python manage.py migrate
