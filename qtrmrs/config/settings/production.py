@@ -1,6 +1,7 @@
 from .base import *
 import dj_database_url
 import os
+from urllib.parse import urlparse
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
@@ -50,6 +51,7 @@ STORAGES = {
             "object_parameters": {
                 "CacheControl": "max-age=86400",
             },
+            "custom_domain": f"{urlparse(os.environ.get('AWS_S3_ENDPOINT_URL')).netloc}/storage/v1/object/public/{os.environ.get('AWS_STORAGE_BUCKET_NAME')}",
         },
     },
 }
