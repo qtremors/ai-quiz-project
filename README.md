@@ -1,65 +1,76 @@
-# 🚀 Learning by Bits
+# Quizzer AI
 
-**Learning by Bits** is an intelligent web application that dynamically generates programming quizzes using the **Google Gemini AI**.  
-Users can create quizzes through a structured setup form or a conversational chat interface, receive instant feedback, and get **AI-powered explanations** for their mistakes.
+**Master Coding Interactively with Gemini AI**
 
----
+Quizzer AI is a modern, adaptive learning platform designed for developers. It leverages Google's Gemini AI to generate infinite, customized quizzes on any programming topic—from Python syntax to System Design architecture.
 
-## ✨ Features
+Unlike static quiz apps, Quizzer AI generates fresh content on the fly, analyzes your answers, and provides context-aware explanations for every mistake you make.
 
-### 🔹 Dual Quiz Generation Modes
-- **Topic-Based Setup**: Select a technology, choose from predefined or custom topics, and set the difficulty to generate a tailored quiz.  
-- **Chat-Based Generation**: Use a conversational interface to ask for a quiz in plain English  
-  _Example: "Make a quiz about Django Models"_.
+## ✨ Key Features
 
-### 🔹 Wide Range of Topics
-- Dynamically generate quizzes for numerous technologies:  
-  **Python, Django, CSS, JavaScript, React**, and various **data science libraries**.
+### 🧠 AI-Powered Generation
 
-### 🔹 AI-Powered Explanations
-- For every incorrect answer, the AI provides a concise explanation to help you learn and improve.
+- **Dynamic Content:** No database of pre-written questions. Every quiz is generated live based on your specific request.
+    
+- **Natural Language Agent:** Chat directly with the AI (e.g., _"Give me a hard quiz on React Hooks optimization"_) to generate a session.
+    
+- **Coding Challenges:** Supports code-based questions with a split-screen syntax highlighter (Prism.js) for realistic debugging scenarios.
+    
 
-### 🔹 User Accounts
-- A complete **custom authentication system** allows users to:
-  - Sign up
-  - Log in
-  - Manage account settings
+### 🎮 Immersive Player
 
-### 🔹 Interactive Quiz Experience
-- Step-by-step, **one-question-per-page** interface.  
-- Clear feedback with **loading animations** during AI generation.
+- **Distraction-Free UI:** A full-screen, focused interface designed for deep work.
+    
+- **Adaptive Layout:** Automatically switches between text-only and split-code layouts based on the question type.
+    
+- **Instant Interactions:** Powered by **HTMX** for a smooth, single-page-app feel without page reloads.
+    
 
----
+### 📊 Analytics & Growth
 
-## 🛠️ Technology Stack
-- **Backend**: Django  
-- **Frontend**: HTML, CSS, Vanilla JavaScript  
-- **AI**: Google Gemini API  
-- **Database**: SQLite (for development)
+- **Smart Explanations:** Don't just see _what_ is wrong, understand _why_. Click "Explain All Mistakes" to get an AI breakdown of your specific logic errors.
+    
+- **History Tracking:** A dashboard that tracks every attempt, score, and topic mastery over time.
+    
+- **Persistent Storage:** All AI-generated explanations are cached in the database to save API costs and provide instant retrieval later.
+    
 
----
+### 🎨 Modern Aesthetic
 
-## 🗺️ Future Roadmap
+- **Theme:** A professional "Midnight" dark theme inspired by my other projects.
+    
+- **Responsive:** Fully responsive grid layouts that work on mobile, tablet, and wide-screen desktops.
+    
+- **Visual Identity:** Custom brand assets, dynamic score badges, and Devicon integration.
+    
 
-### 📈 User Progression & History
-- Store all quiz history, answers, and performance statistics for authenticated users.  
-- Create a **comprehensive user profile page** with performance graphs (accuracy over time, topic mastery).  
-- Implement a **leveling system** where users can "level up" by mastering topics.
+## 🏗️ Tech Stack
 
-### ⚡ Advanced Content & Features
-- Add **code syntax highlighting** for code snippet questions.  
-- Expand topics with new languages: **C++, Go, Rust**.  
-- Hybrid system: Local pool of questions for common topics + AI generation for niche concepts.
+- **Backend:** Django 5.2 (Python 3.11+)
+    
+- **AI Engine:** Google Generative AI SDK (Gemini 2.0 Flash Lite)
+    
+- **Frontend:**
+    
+    - **HTMX:** For server-side reactivity and AJAX navigation.
+        
+    - **Alpine.js:** For client-side interactions (modals, dropdowns).
+        
+    - **CSS:** Custom CSS Variables (Theming) & Flex/Grid layouts.
+        
+- **Database:** SQLite (Dev) / PostgreSQL Ready (Prod)
+    
+- **Utilities:** Prism.js (Syntax Highlighting), Devicon (Logos).
+    
 
-### 🎨 Enhanced UI/UX
-- Persistent **Light/Dark theme toggle** that remembers user choice.  
-- Refactor quiz-taking into a true **Single Page Application (SPA)** for smooth navigation.  
-- Add detailed **analytics to results page**, including time taken per question.
+## 📂 Architecture
 
-### 🏆 Gamification & Engagement
-- Achievements & badges (e.g., *"Python Basics Master"*, *"10-Day Streak"*).  
-- Visual **learning roadmap / skill tree** where users unlock new concepts as they progress.
+The project follows a **Domain-Driven Design** (DDD) within Django:
 
----
-
-🔥 Stay tuned as **Learning by Bits** evolves into the ultimate interactive programming quiz platform!
+- `apps/core`: Global pages (Home, Language Catalog) and shared templates.
+    
+- `apps/users`: Custom Authentication, Profile Management, and Dashboards.
+    
+- `apps/quizzes`: The core domain logic (Quiz generation, Question storage, Attempt tracking).
+    
+- `apps/ai_agent`: Isolated service layer for communicating with Google Gemini.

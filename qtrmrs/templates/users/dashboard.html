@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 1600px; margin: 0 auto; padding: 40px 24px; width: 100%;">
+
+    <div class="dashboard-header">
+        <div>
+            <h1 style="margin-bottom: 8px; font-size: 3rem;">Dashboard</h1>
+            <p style="color: var(--color-text-muted); font-size: 1.2rem;">Welcome back, {{ user.username }}</p>
+        </div>
+        
+        <div class="stats-row">
+            <div class="stat-card">
+                <span class="stat-label">Total Quizzes</span>
+                <span class="stat-value">{{ total_quizzes }}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Average Score</span>
+                <span class="stat-value" style="color: var(--color-primary);">{{ avg_score }}%</span>
+            </div>
+        </div>
+    </div>
+
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; padding-bottom: 16px; border-bottom: 1px solid var(--color-border);">
+        <h3 style="margin: 0; font-size: 1.5rem; color: var(--color-text-main);">Recent Activity</h3>
+        <a href="{% url 'quiz_setup' %}" class="btn btn-text" style="font-size: 0.9rem;">
+            <span class="material-symbols-outlined" style="font-size: 18px;">add</span> New Quiz
+        </a>
+    </div>
+
+    {% if quizzes %}
+        <div class="quiz-grid">
+            {% for quiz in quizzes %}
+            <a href="{% url 'quiz_results' quiz.id %}" class="history-card">
+                
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                    <div>
+                        <span class="topic-tag">{{ quiz.topic_description|truncatechars:25 }}</span>
+                        <div style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 6px;">
+                            {{ quiz.created_at|date:"M d, Y" }}
+                        </div>
+                    </div>
+                    
+                    <div class="score-badge" style="
+                        background: {% if quiz.score >= 80 %}rgba(16,185,129,0.1); color: var(--color-success); border: 1px solid rgba(16,185,129,0.2);
+                        {% elif quiz.score >= 50 %}rgba(245,158,11,0.1); color: var(--color-warning); border: 1px solid rgba(245,158,11,0.2);
+                        {% else %}rgba(239,68,68,0.1); color: var(--color-error); border: 1px solid rgba(239,68,68,0.2);{% endif %}
+                    ">
+                        {{ quiz.score }}%
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto;">
+                    <div class="meta-item">
+                        <span class="material-symbols-outlined">signal_cellular_alt</span>
+                        {{ quiz.difficulty|title }}
+                    </div>
+                    
+                    <span class="view-btn">
+                        View Details <span class="material-symbols-outlined" style="font-size: 16px;">arrow_forward</span>
+                    </span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 80px; border: 1px dashed var(--color-border); border-radius: 16px; background: var(--color-surface);">
+            <div style="background: var(--color-surface-variant); width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto;">
+                <span class="material-symbols-outlined" style="font-size: 32px; color: var(--color-text-muted);">quiz</span>
+            </div>
+            <h3 style="margin-bottom: 8px;">No quizzes yet</h3>
+            <p style="color: var(--color-text-muted); margin-bottom: 32px;">Create your first AI-generated quiz to start tracking progress.</p>
+            <a href="{% url 'quiz_setup' %}" class="btn btn-filled">Start Quiz</a>
+        </div>
+    {% endif %}
+
+</div>
+
+<style>
+    /* Header Layout */
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        flex-wrap: wrap;
+        gap: 32px;
+        margin-bottom: 60px;
+    }
+
+    .stats-row {
+        display: flex;
+        gap: 24px;
+    }
+
+    .stat-card {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        padding: 16px 32px;
+        border-radius: 16px;
+        text-align: center;
+        min-width: 140px;
+    }
+    .stat-label { display: block; font-size: 0.85rem; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .stat-value { font-size: 2rem; font-weight: 700; line-height: 1; }
+
+    /* THE GRID SYSTEM */
+    .quiz-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+        gap: 24px;
+    }
+
+    /* Card Styling */
+    .history-card {
+        display: flex;
+        flex-direction: column;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        padding: 24px;
+        border-radius: 16px;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        min-height: 180px;
+    }
+    .history-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--color-primary);
+        box-shadow: var(--shadow-hover);
+    }
+
+    .topic-tag { 
+        font-weight: 700; 
+        font-size: 1.2rem; 
+        color: var(--color-text-main); 
+        text-transform: capitalize;
+    }
+    
+    .meta-item { 
+        display: flex; 
+        align-items: center; 
+        gap: 8px; 
+        color: var(--color-text-muted); 
+        font-size: 0.9rem;
+        background: var(--color-surface-variant);
+        padding: 4px 10px;
+        border-radius: 6px;
+    }
+    .meta-item .material-symbols-outlined { font-size: 18px; }
+
+    .score-badge {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.95rem;
+    }
+
+    .view-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--color-primary);
+    }
+</style>
+{% endblock %}
