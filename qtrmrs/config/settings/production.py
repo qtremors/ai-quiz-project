@@ -14,8 +14,7 @@ RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
-# Database
-# Parse the DATABASE_URL provided by Render
+# --- 1. Database (Render PostgreSQL) ---
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL'),
@@ -23,14 +22,37 @@ DATABASES = {
     )
 }
 
-# Static Files (WhiteNoise)
+# --- 2. Static Files (WhiteNoise) ---
 # Insert WhiteNoise after SecurityMiddleware
 try:
     middleware_idx = MIDDLEWARE.index('django.middleware.security.SecurityMiddleware') + 1
     MIDDLEWARE.insert(middleware_idx, 'whitenoise.middleware.WhiteNoiseMiddleware')
 except ValueError:
-    # Fallback if SecurityMiddleware isn't found
     MIDDLEWARE.insert(0, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
-# Enable WhiteNoise compression and caching
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# --- 3. Storage Configuration (Django 5.0+ Style) ---
+STORAGES = {
+    # Static files (CSS/JS) -> Served by WhiteNoise
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+    # Media files (Uploads) -> Served by Supabase (via S3)
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        "OPTIONS": {
+            "access_key": os.environ.get("AWS_ACCESS_KEY_ID"),
+            "secret_key": os.environ.get("AWS_SECRET_ACCESS_KEY"),
+            "bucket_name": os.environ.get("AWS_STORAGE_BUCKET_NAME"),
+            "endpoint_url": os.environ.get("AWS_S3_ENDPOINT_URL"),
+            "region_name": os.environ.get("AWS_S3_REGION_NAME"),
+            "default_acl": "public-read", # Makes uploaded files public by default
+            "querystring_auth": False,    # Removes annoying signature params from URLs
+            "object_parameters": {
+                "CacheControl": "max-age=86400",
+            },
+        },
+    },
+}
+
+# Required for django-storages
+INSTALLED_APPS += ['storages']
